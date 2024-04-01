@@ -1,4 +1,4 @@
-##Calulator AWS
+#Calulator AWS
 
 Created a simple Calculator using AWS Services.
 Services Used - S3, API Gateway, Lambda, Amplify, DynamoDB.
