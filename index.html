@@ -1,0 +1,131 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>To the Power of Math!</title>
+        <!-- Styling for the client UI -->
+        <style>
+            /* Body styling */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
+    
+            /* Calculator container */
+            .calculator-container {
+                max-width: 400px;
+                margin: 50px auto;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+    
+            /* Calculator header */
+            .calculator-header {
+                text-align: center;
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+    
+            /* Input container */
+            .input-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+    
+            /* Input styling */
+            .input-container input[type="text"],
+            .input-container select {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
+            }
+    
+            /* Button styling */
+            .calculator-button {
+                background-color: #4caf50;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                padding: 10px 20px;
+                font-size: 18px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+    
+            .calculator-button:hover {
+                background-color: #45a049;
+            }
+            
+            /* Result display styling */
+            #result {
+                text-align: center;
+                margin-top: 20px;
+                font-size: 20px;
+            }
+        </style>
+        <script>
+            // callAPI function that takes the base, exponent, and operator as parameters
+            var callAPI = (base, exponent, operator) => {
+                // Instantiate a headers object
+                var myHeaders = new Headers();
+                // Add content type header to object
+                myHeaders.append("Content-Type", "application/json");
+                // Using built-in JSON utility package turn object to string and store in a variable
+                var raw = JSON.stringify({"base": base, "exponent": exponent, "operator": operator});
+                // Create a JSON object with parameters for API call and store in a variable
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+                // Make API call with parameters and use promises to get response
+                fetch("https://8gquicfyuc.execute-api.ca-central-1.amazonaws.com/dev", requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+                        // Parse the result JSON string to an object
+                        var parsedResult = JSON.parse(result);
+                        // Access the result body and display it in the result div
+                        document.getElementById('result').textContent = parsedResult.body;
+                    })
+                    .catch(error => console.log('error', error));
+            }
+        </script>
+    </head>
+    <body>
+    <div class="calculator-container">
+        <h1 class="calculator-header">Calculator</h1>
+        <form>
+            <div class="input-container">
+                <label for="base">First Number:</label>
+                <input type="text" id="base">
+    
+                <select id="operator">
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">*</option>
+                    <option value="/">/</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="exponent">Second Number:</label>
+                <input type="text" id="exponent">
+            </div>
+            <button class="calculator-button" type="button" onclick="callAPI(document.getElementById('base').value, document.getElementById('exponent').value, document.getElementById('operator').value)">CALCULATE</button>
+            <!-- Result display -->
+            <div id="result"></div>
+        </form>
+    </div>
+    </body>
+    </html>
+    
